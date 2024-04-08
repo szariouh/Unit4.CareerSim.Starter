@@ -54,6 +54,56 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.container{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: repeat(3, 150px);
+  gap: 20px;
+
+}
+.container h1{
+  grid-column: 1; 
+  grid-row: 1; 
+  font-size: 18px;
+
+}
+
+.nav{
+  grid-column: 1 / span 1;  
+  grid-row: 2;  
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+.nav *{
+  background-color: #646cff;
+  
+}
+.auth{
+  grid-column: 3 / span 4; 
+  grid-row: 1; 
+}
+.main{
+  grid-column: 2 / -1; 
+  grid-row: 2;
+}
+
+
+
+.products li{
+  border: 1.5px solid gray;
+  margin-bottom: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+.products h4{
+  margin: 0;
+  padding: 0;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -66,3 +116,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+

@@ -194,10 +194,10 @@ const {
     const usersDummyData = await Promise.all([
       createUser({firstname: 'Adam', lastname: 'Ag', 
                   email:'adam@com', phone: '6151328764', password: 'adam_pw', 
-                  is_admin: false, is_engineer: true}),
+                  is_admin: false}),
       createUser({firstname: 'Yasir', lastname: 'Atg', 
                   email:'yasir@com', phone: '6291382734', password: 'yasir_pw', 
-                  is_admin: true, is_engineer: false}),
+                  is_admin: true}),
      ]);
 
     console.log(await fetchUsers());
