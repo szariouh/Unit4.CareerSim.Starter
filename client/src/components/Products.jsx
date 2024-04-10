@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 
-export default function Products({ products}){
+export default function Products({ products, auth, addToCart}){
     
     const navigate = useNavigate();
     
@@ -22,6 +22,11 @@ export default function Products({ products}){
                             navigate(`/${product.id}`);
                             }}>Details
                         </button>
+                        {
+                          auth.id && <button onClick={()=>{addToCart(product.id,1)}}>Add
+
+                          </button>
+                        }
                        
                     </div>
                   </div>

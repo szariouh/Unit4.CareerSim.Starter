@@ -1,32 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Cart({auth, products, cart, setCart, removeFromCart,count, 
-    setCount, subtotal, setSubtotal}){
+export default function Cart({auth, products, cart, removeFromCart, updateCart, count, 
+    setCount}){
 
-    const navigate = useNavigate(); 
-
-    // update cart
-    const updateCart = async(product_id, qty)=> {
-        const response = await fetch(`/api/users/${auth.id}/cart`, {
-          method: 'PUT',
-          body: JSON.stringify({ product_id, qty}),
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: window.localStorage.getItem('token')
-          }
-        });
-        return response
-      };
-
-       
+    const navigate = useNavigate();   
 
 
     
     return(
         <>
-            {auth.id && cart &&
-                <div>
+                    {auth.id? 
+                    <div>
                     <ul className="cart-list">
                         {cart.map(item => {
                             const myProduct = products.find(product => product.id === item.product_id);
@@ -53,12 +38,7 @@ export default function Cart({auth, products, cart, setCart, removeFromCart,coun
                                                 </button>
                                                 :
                                                 <button onClick={async () => {
-                                                    const response = await updateCart(myProduct.id, item.qty - 1)
-                                                    const json = await response.json();                                                 
-                                                    if(response.ok){
-                                                        item.qty = json.qty;
-                                                        setCount((n)=>--n)                                                       
-                                                    }
+                                                    updateCart(myProduct.id, item.qty - 1)
                                                 }}>-
                                                 </button>
                                             }
@@ -66,12 +46,7 @@ export default function Cart({auth, products, cart, setCart, removeFromCart,coun
                                             {item.qty}
 
                                             <button onClick={async () => {
-                                                const response = await updateCart(myProduct.id, item.qty + 1)
-                                                const json = await response.json();
-                                                if(response.ok){
-                                                    item.qty = json.qty;
-                                                    setCount((n)=>++n)
-                                                }
+                                                 updateCart(myProduct.id, item.qty + 1)
                                             }}>+</button>
                                         </div>
                                         <button onClick={() => { removeFromCart(item.product_id) }} className="delete-btn">Delete
@@ -82,10 +57,13 @@ export default function Cart({auth, products, cart, setCart, removeFromCart,coun
                         })
                         }
                     </ul>
-                    <div>Subtotal ({count} items): ${subtotal}</div>
+                   
                     <button className={" proceed-checkout"} onClick={()=>{navigate('/checkout')}}>Proceed to checkout</button>
                 </div>
-            }
-        </>
+
+                    :  
+                    <div>Log in to see your cart.</div>
+                    }              
+                </>
     )
 }

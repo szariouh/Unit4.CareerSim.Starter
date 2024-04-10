@@ -16,6 +16,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(()=> {
     const token = window.localStorage.getItem('token');
@@ -60,16 +61,7 @@ function App() {
     else {
       setCart([]);
     }
-  }, [auth, count]);
-
- 
-  useEffect(()=> {
-    setCount(
-        cart.reduce((accumulator ,item) => {
-            return accumulator + item.qty;
-      }, 0)
-      )
-  }, [auth, cart]);
+  }, [auth, refresh]);
 
 
   const addToCart = async(product_id, qty)=> {
@@ -88,9 +80,29 @@ function App() {
     else {
       console.error(json.error);
     }
-    return json
   };
 
+ // update cart
+ const updateCart = async(product_id, qty)=> {
+  const response = await fetch(`/api/users/${auth.id}/cart`, {
+    method: 'PUT',
+    body: JSON.stringify({ product_id, qty}),
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: window.localStorage.getItem('token')
+    }
+  });
+  const json = await response.json();                                                 
+  if(response.ok){
+      for(let el of cart){
+        if(el.product_id === product_id ){
+          el = json;
+        }
+      }
+      setRefresh(prevRefresh => !prevRefresh);
+  }
+  
+};
 
   const removeFromCart = async(id)=> {
     const response = await fetch(`/api/users/${auth.id}/cart/${id}`, {
@@ -104,6 +116,15 @@ function App() {
     }
    
   };
+
+  useEffect(()=> {
+    setCount(
+        cart.reduce((accumulator ,item) => {
+            return accumulator + item.qty;
+      }, 0)
+      )
+  }, [auth, cart]);
+  
 
   const attemptLoginWithToken = async()=> {
     const token = window.localStorage.getItem('token');
@@ -186,7 +207,7 @@ function App() {
 
       <div className='nav'>
             <Link to='/'>Home</Link>
-            <Link to='/cart'>Cart</Link>
+            <Link to='/cart'>Cart (<span style={{color: 'red'}}>{count}</span>)</Link>
             <Link to={'/account'}>Account</Link>
             <Link to={'/users'}>Users</Link>
       </div>
@@ -214,8 +235,8 @@ function App() {
         <Route path="/:id" element={<SingleProduct auth={auth} cart={cart}  
           addToCart={addToCart} removeFromCart={removeFromCart} />} 
         />
-        <Route path="/cart" element={<Cart auth={auth} products={products} cart={cart} setCart={setCart}
-          removeFromCart={removeFromCart} count={count} setCount={setCount} />} 
+        <Route path="/cart" element={<Cart auth={auth} products={products} cart={cart} 
+        updateCart={updateCart} setCart={setCart} removeFromCart={removeFromCart} />} 
         />
         <Route path="/account" element={<Account auth={auth} />} 
         />
