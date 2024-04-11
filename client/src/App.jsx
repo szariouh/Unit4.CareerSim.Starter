@@ -101,6 +101,10 @@ function App() {
       }
       setRefresh(prevRefresh => !prevRefresh);
   }
+  else{
+    console.error(json.error)
+    alert(json.error)
+  }
   
 };
 
@@ -202,23 +206,26 @@ function App() {
 
 
   return (
-    <div className="container">
+    <div className={auth.id? "container auth" : "container no-auth"}>
       <h1>E-Commerce Site</h1>
 
       <div className='nav'>
             <Link to='/'>Home</Link>
-            <Link to='/cart'>Cart (<span style={{color: 'red'}}>{count}</span>)</Link>
-            <Link to={'/account'}>Account</Link>
-            <Link to={'/users'}>Users</Link>
+            {auth.id && <>
+              <Link to='/cart'>Cart (<span style={{color: 'red'}}>{count}</span>)</Link>
+              <Link to={'/account'}>Account</Link>
+            </>
+           }
+            {auth.is_admin && <Link to={'/users'}>Users</Link>}
       </div>
 
      <div className='auth'>
      {auth.id? 
-        <div>
+        <div className='logout'>
           <button onClick={ logout }>Logout {auth.firstname}</button>
         </div>
         : 
-        <div>
+        <div className='login-register'>
            <Login login={login}/>
            <div>Or</div>
            <Register register={register}/>    

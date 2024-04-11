@@ -4,6 +4,9 @@ export default function Account({auth}){
         return (
             <>
             {
+                !auth.id && <div>Log in to see account details.</div>
+            }
+            { auth.id && 
                 <div>
                 <h3>Account details</h3>
                 <ul className="account-details">

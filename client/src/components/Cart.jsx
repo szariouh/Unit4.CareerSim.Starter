@@ -17,11 +17,13 @@ export default function Cart({auth, products, cart, removeFromCart, updateCart, 
                             const myProduct = products.find(product => product.id === item.product_id);
 
                             return <li key={item.id} className="cart-item">
-                                <div className="cart-item-top">
-                                    <h4>{myProduct.title}</h4> 
-                                    <div>${item.price}/ea</div>
+                                <div>
+                                    <h4>{myProduct.title}</h4>
+                                    <img src={myProduct.image} alt="product image" style={{width: '175px' , height:'120px'}}/>
+                                                
                                 </div>
                                 <div>
+                                    <div>${myProduct.price}/ea</div>
                                     <p>{myProduct.description}.</p>
                                     <div>{myProduct.dimensions}</div>
                                     <div>{myProduct.inventory > 0 ?
@@ -30,8 +32,8 @@ export default function Cart({auth, products, cart, removeFromCart, updateCart, 
                                             : <div>In Stock</div>
                                         : <p>Out of Stock</p>}
                                     </div>
-                                    <div className="cart-item-edit">
-                                        <div className="edit-qty">
+                                    <div className="cart-item-control">
+                                        <div className="update-qty">
                                             {
                                                 item.qty === 1? 
                                                 <button onClick={() => { removeFromCart(item.product_id) }} className="delete-btn">Remove
@@ -43,7 +45,7 @@ export default function Cart({auth, products, cart, removeFromCart, updateCart, 
                                                 </button>
                                             }
                                             
-                                            {item.qty}
+                                           <div className="qty"> {item.qty}</div>
 
                                             <button onClick={async () => {
                                                  updateCart(myProduct.id, item.qty + 1)
@@ -58,7 +60,6 @@ export default function Cart({auth, products, cart, removeFromCart, updateCart, 
                         }
                     </ul>
                    
-                    <button className={" proceed-checkout"} onClick={()=>{navigate('/checkout')}}>Proceed to checkout</button>
                 </div>
 
                     :  
